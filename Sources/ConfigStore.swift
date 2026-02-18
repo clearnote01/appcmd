@@ -6,16 +6,22 @@ final class ConfigStore {
 
     private struct Config: Codable {
         var assignments: [AppAssignment] = []
-        var isUIEnabled: Bool = true
+        var isOverlayEnabled: Bool = false
+        var isCheatSheetEnabled: Bool = true
         var theme: SwitcherTheme = .comfortable
     }
 
     private var config = Config()
     private let fileURL: URL
     
-    var isUIEnabled: Bool {
-        get { config.isUIEnabled }
-        set { config.isUIEnabled = newValue }
+    var isOverlayEnabled: Bool {
+        get { config.isOverlayEnabled }
+        set { config.isOverlayEnabled = newValue }
+    }
+    
+    var isCheatSheetEnabled: Bool {
+        get { config.isCheatSheetEnabled }
+        set { config.isCheatSheetEnabled = newValue }
     }
     
     var theme: SwitcherTheme {

@@ -18,8 +18,8 @@ final class HotkeyManager {
             self?.onLongPress?()
         }
         longPressWorkItem = item
-        // 3 seconds feels more natural than 5, but still intentional
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: item)
+        // 2 seconds feels more natural
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: item)
     }
 
     private func cancelLongPressTimer() {

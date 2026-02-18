@@ -31,20 +31,25 @@ final class AppSwitcher {
         configStore.save()
     }
     
-    func setUIEnabled(_ enabled: Bool) {
-        configStore.isUIEnabled = enabled
+    func setOverlayEnabled(_ enabled: Bool) {
+        configStore.isOverlayEnabled = enabled
+        configStore.save()
+    }
+    
+    func setCheatSheetEnabled(_ enabled: Bool) {
+        configStore.isCheatSheetEnabled = enabled
         configStore.save()
     }
 
     func handleLongPress() {
-        guard configStore.isUIEnabled else { return }
+        guard configStore.isCheatSheetEnabled else { return }
         overlay.showCheatSheet(assignments: configStore.getAllAssignments())
     }
 
     func handleSwitchKey(letter: Character) {
         let lower = Character(letter.lowercased())
         let associatedApps = apps(for: lower)
-        let showUI = configStore.isUIEnabled
+        let showUI = configStore.isOverlayEnabled
 
         if let assignment = configStore.assignment(for: lower) {
             handleStaticAssignment(letter: lower, assignment: assignment, apps: associatedApps, showUI: showUI)

@@ -53,17 +53,24 @@ final class SettingsWindowController: NSWindowController {
         
         y -= 45
         
-        // UI toggle
-        let hudLabel = NSTextField(labelWithString: "Visual Feedback:")
-        hudLabel.frame = NSRect(x: 20, y: y, width: 150, height: 20)
-        contentView.addSubview(hudLabel)
+        // UI toggles
+        let overlayLabel = NSTextField(labelWithString: "Visual Feedback:")
+        overlayLabel.frame = NSRect(x: 20, y: y, width: 150, height: 20)
+        contentView.addSubview(overlayLabel)
         
-        let uiToggle = NSButton(checkboxWithTitle: "Show Overlay & Notifications", target: self, action: #selector(uiToggled(_:)))
-        uiToggle.frame = NSRect(x: 180, y: y, width: 200, height: 20)
-        uiToggle.state = configStore.isUIEnabled ? .on : .off
-        contentView.addSubview(uiToggle)
+        let overlayToggle = NSButton(checkboxWithTitle: "Show App Switcher Overlay", target: self, action: #selector(overlayToggled(_:)))
+        overlayToggle.frame = NSRect(x: 180, y: y, width: 200, height: 20)
+        overlayToggle.state = configStore.isOverlayEnabled ? .on : .off
+        contentView.addSubview(overlayToggle)
         
-        y -= 55
+        y -= 25
+        
+        let cheatSheetToggle = NSButton(checkboxWithTitle: "Enable Long-Press Cheat Sheet", target: self, action: #selector(cheatSheetToggled(_:)))
+        cheatSheetToggle.frame = NSRect(x: 180, y: y, width: 250, height: 20)
+        cheatSheetToggle.state = configStore.isCheatSheetEnabled ? .on : .off
+        contentView.addSubview(cheatSheetToggle)
+        
+        y -= 45
         
         // Assignments section
         let assignmentsLabel = NSTextField(labelWithString: "Key Assignments:")
@@ -152,8 +159,12 @@ final class SettingsWindowController: NSWindowController {
         }
     }
     
-    @objc private func uiToggled(_ sender: NSButton) {
-        appSwitcher?.setUIEnabled(sender.state == .on)
+    @objc private func overlayToggled(_ sender: NSButton) {
+        appSwitcher?.setOverlayEnabled(sender.state == .on)
+    }
+    
+    @objc private func cheatSheetToggled(_ sender: NSButton) {
+        appSwitcher?.setCheatSheetEnabled(sender.state == .on)
     }
     
     @objc private func actionChanged(_ sender: NSPopUpButton) {
