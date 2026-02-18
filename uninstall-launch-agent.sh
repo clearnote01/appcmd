@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script to uninstall AppSwitch Launch Agent
+# Script to uninstall AppCmd Launch Agent
 
 LAUNCH_AGENT_NAME="com.appcmd.launchagent"
 PLIST_FILE="$HOME/Library/LaunchAgents/$LAUNCH_AGENT_NAME.plist"

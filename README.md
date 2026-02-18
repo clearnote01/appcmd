@@ -1,19 +1,21 @@
 ## AppCmd - App Switcher
 
-AppCmd is a minimal Swift-based app switcher for macOS that allows you to instantly switch between applications using the Right Command key. It is inspired by the functionality of `rcmd`.
+AppCmd is a minimal Swift-based app switcher for macOS that allows you to instantly switch between applications using the **Right Command** key. It is inspired by the functionality of `rcmd`.
 
-It listens for:
+### Features
 
-- **Right Command + letter**: switch to (or cycle between) apps starting with that letter.
-- **Right Command + Option + letter**: assign that letter to the currently focused app (static mapping).
-
-Static mappings are stored on disk and used to **launch** apps when they are not running.
+- **Instant Switching**: Use **Right Command + [Letter]** to jump to any running app starting with that letter.
+- **App Cycling**: Repeatedly press the same letter while holding Right Command to cycle through all matching apps.
+- **Visual Overlay**: A modern, translucent UI showing matching apps and your current selection.
+- **Static Mapping**: Assign specific letters to specific apps (e.g., 'O' for Outlook) using **Right Command + Option + [Letter]**.
+- **Auto-Launch**: Static mappings will automatically launch the assigned app if it isn't running.
+- **Menu Bar Icon**: Quick access to Settings and app status.
+- **HUD Feedback**: Optional on-screen notifications for quick switches.
 
 ### Requirements
 
 - macOS 13 or newer.
-- Swift toolchain (Xcode command line tools).
-- **Accessibility** and **Input Monitoring** permissions for the built binary (needed for global hotkeys).
+- **Accessibility** permissions (required for global hotkey detection).
 
 ### Installation (Homebrew)
 
@@ -35,62 +37,24 @@ From the project root:
 swift build -c release
 ```
 
-The executable will be at:
-
-```bash
-.build/release/appcmd
-```
-
-### Run
-
-Run the tool from the terminal:
-
-```bash
-./.build/release/appcmd
-```
-
-On first run, macOS will likely ask you to grant:
-
-- **Accessibility** access.
-- **Input Monitoring** access.
-
-Grant these in **System Settings → Privacy & Security**. If it does not appear automatically, add the built binary manually.
-
-The tool will keep running in the background in that terminal, listening for hotkeys.
+The executable will be at `.build/release/appcmd`.
 
 ### Usage
 
-- **Switching apps dynamically**
-  - Hold **Right Command** and press a letter, e.g. `S`.
-  - The tool finds all **running** apps whose name starts with that letter (`Safari`, `Spotify`, `Shortcuts`, etc.).
-  - It focuses the most appropriate one and brings it to the front.
-  - Repeated presses of the same letter will **cycle** between matching apps.
+- **Dynamic Switching**: Hold **Right Command** and press a letter (e.g., `S` for Safari).
+- **Custom Assignment**: Focus an app, then hold **Right Command + Option** and press a letter.
+- **Settings**: Click the `⌘` icon in the menu bar and select **Settings...** to customize themes, HUD feedback, and manage your assignments.
 
-- **Static assignments (launch apps)**
-  - Focus an app (e.g. Music).
-  - Hold **Right Command + Option** and press a letter, e.g. `U`.
-  - From now on, **Right Command + U** will:
-    - Focus Music if it is running.
-    - Launch Music if it is not.
+Static assignments are stored in:
+`~/Library/Application Support/AppCmd/config.json`
 
-Static assignments and per-key settings are stored in:
+### Auto-start at Login (Manual)
 
-```text
-~/Library/Application Support/AppCmd/config.json
-```
-
-### Auto-start at Login
-
-To make AppCmd start automatically when you log in:
+If not using Homebrew services, you can use the provided scripts:
 
 ```bash
 ./install-launch-agent.sh
 ```
-
-This will:
-- Create a Launch Agent plist file
-- Configure it to start AppSwitch at login
-- Load it immediately
 
 To disable auto-start:
 
@@ -98,13 +62,10 @@ To disable auto-start:
 ./uninstall-launch-agent.sh
 ```
 
-Alternatively, you can manually add it to **System Settings → General → Login Items**.
+### Notes
 
-### Notes / limitations
+- **Right Command**: This tool specifically targets the **Right Command** key to avoid conflicts with standard system shortcuts.
+- **Permissions**: If the app doesn't seem to respond, ensure it is enabled under **System Settings → Privacy & Security → Accessibility**.
 
-- This is a **CLI-style core**, not a full App Store-ready GUI app:
-  - There is no menu bar icon or visual app switcher overlay yet.
-  - Those can be added later in a dedicated macOS app target using this core as a library.
-- Right Command detection uses `NSEvent`’s `modifierFlags` and specifically the `.rightCommand` flag.
-- For advanced window-level switching (per-window instead of per-app), you would need to integrate with Accessibility APIs or an external tool (similar to how `appcmd` uses Hammerspoon).
-
+---
+Created with love by Utkarsh Raj

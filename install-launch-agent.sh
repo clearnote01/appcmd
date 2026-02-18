@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script to install AppSwitch as a Launch Agent for auto-start at login
+# Script to install AppCmd as a Launch Agent for auto-start at login
 
 APP_NAME="AppCmd"
 LAUNCH_AGENT_NAME="com.appcmd.launchagent"
@@ -9,7 +9,7 @@ APP_PATH="$SCRIPT_DIR/.build/release/appcmd"
 
 # Check if app exists
 if [ ! -f "$APP_PATH" ]; then
-    echo "Error: AppSwitch not found at $APP_PATH"
+    echo "Error: AppCmd not found at $APP_PATH"
     echo "Please build the app first with: swift build -c release"
     exit 1
 fi
