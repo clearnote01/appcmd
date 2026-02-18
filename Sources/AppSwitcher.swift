@@ -21,22 +21,30 @@ final class AppSwitcher {
     private var currentApps: [NSRunningApplication] = []
     private var currentSelectedIndex = 0
     
-    func setTheme(_ theme: SwitcherTheme) {
-        overlay.setTheme(theme)
+    init() {
+        overlay.setTheme(configStore.theme)
     }
     
-    func setHUDEnabled(_ enabled: Bool) {
-        hud.isEnabled = enabled
+    func setTheme(_ theme: SwitcherTheme) {
+        configStore.theme = theme
+        overlay.setTheme(theme)
+        configStore.save()
+    }
+    
+    func setUIEnabled(_ enabled: Bool) {
+        configStore.isUIEnabled = enabled
+        configStore.save()
     }
 
-    func handleSwitchKey(letter: Character, showOverlay: Bool = true) {
+    func handleSwitchKey(letter: Character) {
         let lower = Character(letter.lowercased())
         let associatedApps = apps(for: lower)
+        let showUI = configStore.isUIEnabled
 
         if let assignment = configStore.assignment(for: lower) {
-            handleStaticAssignment(letter: lower, assignment: assignment, apps: associatedApps, showOverlay: showOverlay)
+            handleStaticAssignment(letter: lower, assignment: assignment, apps: associatedApps, showUI: showUI)
         } else {
-            cycleDynamic(letter: lower, apps: associatedApps, showOverlay: showOverlay)
+            cycleDynamic(letter: lower, apps: associatedApps, showUI: showUI)
         }
     }
     
@@ -106,12 +114,12 @@ final class AppSwitcher {
         hud.show(message: "Assigned '\(lower)' to \(name)")
     }
 
-    private func handleStaticAssignment(letter: Character, assignment: AppAssignment, apps: [NSRunningApplication], showOverlay: Bool = false) {
+    private func handleStaticAssignment(letter: Character, assignment: AppAssignment, apps: [NSRunningApplication], showUI: Bool = false) {
         let matchingRunning = workspace.runningApplications.first { $0.bundleIdentifier == assignment.bundleIdentifier }
         let frontmost = workspace.frontmostApplication
 
-        // If overlay is enabled and we have multiple apps, show overlay
-        if showOverlay && apps.count > 1 {
+        // If UI is enabled and we have multiple apps, show overlay
+        if showUI && apps.count > 1 {
             currentApps = apps
             
             if let app = matchingRunning {
@@ -173,24 +181,27 @@ final class AppSwitcher {
             return
         }
 
-        // Fallback to HUD if overlay disabled or only one app
+        // Fallback to HUD if UI enabled but only one app
         if let app = matchingRunning {
             if let front = frontmost, front == app {
                 switch assignment.whenFocusedAction {
                 case .hide:
                     app.hide()
                 case .cycle:
-                    cycleDynamic(letter: letter, apps: apps, showOverlay: showOverlay)
+                    cycleDynamic(letter: letter, apps: apps, showUI: showUI)
                 }
             } else {
                 activate(app: app)
-                let name = app.localizedName ?? assignment.bundleIdentifier
-                hud.show(message: name, appIcon: app.icon)
+                if showUI {
+                    let name = app.localizedName ?? assignment.bundleIdentifier
+                    hud.show(message: name, appIcon: app.icon)
+                }
             }
         } else {
             launch(assignment: assignment)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                if let appURL = self.getAppURL(for: assignment),
+                if showUI,
+                   let appURL = self.getAppURL(for: assignment),
                    let app = self.workspace.runningApplications.first(where: { $0.bundleURL == appURL }) {
                     let name = app.localizedName ?? assignment.bundleIdentifier
                     self.hud.show(message: name, appIcon: app.icon)
@@ -209,7 +220,7 @@ final class AppSwitcher {
         return nil
     }
 
-    private func cycleDynamic(letter: Character, apps: [NSRunningApplication], showOverlay: Bool = false) {
+    private func cycleDynamic(letter: Character, apps: [NSRunningApplication], showUI: Bool = false) {
         guard !apps.isEmpty else { return }
         
         currentApps = apps
@@ -224,15 +235,16 @@ final class AppSwitcher {
             target = apps[0]
         }
 
-        if showOverlay && apps.count > 1 {
+        if showUI && apps.count > 1 {
             overlay.show(apps: apps, selectedIndex: currentSelectedIndex)
             activate(app: target)
             overlay.scheduleHide(after: 8.0)
         } else {
             activate(app: target)
-            // Show HUD even if showOverlay is true, if we only have one app
-            let name = target.localizedName ?? "App"
-            hud.show(message: name, appIcon: target.icon)
+            if showUI {
+                let name = target.localizedName ?? "App"
+                hud.show(message: name, appIcon: target.icon)
+            }
         }
     }
 

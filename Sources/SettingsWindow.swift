@@ -33,20 +33,27 @@ final class SettingsWindowController: NSWindowController {
         
         let themeSegmented = NSSegmentedControl(labels: ["Clean", "Compact", "Comfortable"], trackingMode: .selectOne, target: self, action: #selector(themeChanged(_:)))
         themeSegmented.frame = NSRect(x: 180, y: y, width: 340, height: 25)
-        themeSegmented.selectedSegment = 2 // Default to Comfortable
+        
+        let themeIndex: Int
+        switch configStore.theme {
+        case .clean: themeIndex = 0
+        case .compact: themeIndex = 1
+        case .comfortable: themeIndex = 2
+        }
+        themeSegmented.selectedSegment = themeIndex
         contentView.addSubview(themeSegmented)
         
         y -= 45
         
-        // HUD toggle
-        let hudLabel = NSTextField(labelWithString: "HUD Feedback:")
+        // UI toggle
+        let hudLabel = NSTextField(labelWithString: "Visual Feedback:")
         hudLabel.frame = NSRect(x: 20, y: y, width: 150, height: 20)
         contentView.addSubview(hudLabel)
         
-        let hudToggle = NSButton(checkboxWithTitle: "Enable HUD notifications", target: self, action: #selector(hudToggled(_:)))
-        hudToggle.frame = NSRect(x: 180, y: y, width: 200, height: 20)
-        hudToggle.state = .on
-        contentView.addSubview(hudToggle)
+        let uiToggle = NSButton(checkboxWithTitle: "Show Overlay & Notifications", target: self, action: #selector(uiToggled(_:)))
+        uiToggle.frame = NSRect(x: 180, y: y, width: 200, height: 20)
+        uiToggle.state = configStore.isUIEnabled ? .on : .off
+        contentView.addSubview(uiToggle)
         
         y -= 55
         
@@ -136,8 +143,8 @@ final class SettingsWindowController: NSWindowController {
         }
     }
     
-    @objc private func hudToggled(_ sender: NSButton) {
-        appSwitcher?.setHUDEnabled(sender.state == .on)
+    @objc private func uiToggled(_ sender: NSButton) {
+        appSwitcher?.setUIEnabled(sender.state == .on)
     }
     
     @objc private func actionChanged(_ sender: NSPopUpButton) {

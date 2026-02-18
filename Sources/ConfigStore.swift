@@ -5,10 +5,22 @@ final class ConfigStore {
 
     private struct Config: Codable {
         var assignments: [AppAssignment] = []
+        var isUIEnabled: Bool = true
+        var theme: SwitcherTheme = .comfortable
     }
 
     private var config = Config()
     private let fileURL: URL
+    
+    var isUIEnabled: Bool {
+        get { config.isUIEnabled }
+        set { config.isUIEnabled = newValue }
+    }
+    
+    var theme: SwitcherTheme {
+        get { config.theme }
+        set { config.theme = newValue }
+    }
 
     private init() {
         let fileManager = FileManager.default
