@@ -15,7 +15,19 @@ Static mappings are stored on disk and used to **launch** apps when they are not
 - Swift toolchain (Xcode command line tools).
 - **Accessibility** and **Input Monitoring** permissions for the built binary (needed for global hotkeys).
 
-### Build
+### Installation (Homebrew)
+
+The easiest way to install and stay updated is via Homebrew:
+
+```bash
+brew tap clearnote01/tap
+brew install appcmd
+brew services start appcmd
+```
+
+**Note:** After installation, you will need to grant **Accessibility** permissions to `appcmd` in **System Settings → Privacy & Security → Accessibility**. The binary is typically located at `/opt/homebrew/bin/appcmd`.
+
+### Build from Source
 
 From the project root:
 
