@@ -1,5 +1,20 @@
 import AppKit
 
+// Ensure only one instance is running
+let runningApps = NSWorkspace.shared.runningApplications
+let otherInstances = runningApps.filter { 
+    $0.bundleIdentifier == Bundle.main.bundleIdentifier && $0 != NSRunningApplication.current 
+}
+
+for instance in otherInstances {
+    instance.terminate()
+}
+
+// Give a tiny moment for the other instance to quit
+if !otherInstances.isEmpty {
+    Thread.sleep(forTimeInterval: 0.2)
+}
+
 private let app = NSApplication.shared
 private let delegate = AppDelegate()
 
