@@ -1,6 +1,6 @@
 ## AppCmd - App Switcher
 
-This is a minimal Swift implementation of an `appcmd`-style app switcher for macOS.
+AppCmd is a minimal Swift-based app switcher for macOS that allows you to instantly switch between applications using the Right Command key. It is inspired by the functionality of `rcmd`.
 
 It listens for:
 
