@@ -2,6 +2,7 @@ import Foundation
 
 final class ConfigStore {
     static let shared = ConfigStore()
+    static let configUpdatedNotification = Notification.Name("ConfigStoreUpdated")
 
     private struct Config: Codable {
         var assignments: [AppAssignment] = []
@@ -37,6 +38,7 @@ final class ConfigStore {
         }
 
         self.fileURL = baseDir.appendingPathComponent("config.json")
+        print("Config Path: \(fileURL.path)")
         load()
     }
 
@@ -58,6 +60,7 @@ final class ConfigStore {
         do {
             let data = try JSONEncoder().encode(config)
             try data.write(to: fileURL, options: [.atomic])
+            NotificationCenter.default.post(name: ConfigStore.configUpdatedNotification, object: nil)
         } catch {
             print("Failed to save config: \(error)")
         }

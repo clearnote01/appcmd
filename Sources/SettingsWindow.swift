@@ -17,6 +17,14 @@ final class SettingsWindowController: NSWindowController {
         self.init(window: window)
         self.appSwitcher = appSwitcher
         setupContent()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshContent), name: ConfigStore.configUpdatedNotification, object: nil)
+    }
+    
+    @objc private func refreshContent() {
+        DispatchQueue.main.async {
+            self.setupContent()
+        }
     }
     
     private func setupContent() {
