@@ -83,7 +83,7 @@ final class SettingsWindowController: NSWindowController {
         y -= 30
         
         // Footer (Created with love) - Positioned at the very bottom
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.5"
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "dev"
         let footerLabel = NSTextField(labelWithString: "v\(version) • Created with love by Utkarsh Raj")
         footerLabel.font = NSFont.systemFont(ofSize: 10, weight: .light)
         footerLabel.textColor = .tertiaryLabelColor
