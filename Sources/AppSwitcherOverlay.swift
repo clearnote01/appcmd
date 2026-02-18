@@ -133,11 +133,11 @@ final class AppSwitcherOverlay {
         
         switch theme {
         case .clean:
-            layer.backgroundColor = NSColor(calibratedWhite: 1.0, alpha: 1.0).cgColor
-            layer.cornerRadius = 8
+            layer.backgroundColor = NSColor.windowBackgroundColor.cgColor
+            layer.cornerRadius = 10
             layer.shadowOpacity = 0.3
         case .compact:
-            layer.backgroundColor = NSColor(calibratedWhite: 0.95, alpha: 0.95).cgColor
+            layer.backgroundColor = NSColor.controlBackgroundColor.cgColor
             layer.cornerRadius = 8
             layer.shadowOpacity = 0.25
         case .comfortable:
@@ -151,7 +151,7 @@ final class AppSwitcherOverlay {
                 container.addSubview(ev, positioned: .below, relativeTo: nil)
                 effectView = ev
             }
-            layer.cornerRadius = 12
+            layer.cornerRadius = 14
             layer.shadowOpacity = 0.4
         }
     }
@@ -172,7 +172,6 @@ final class AppSwitcherOverlay {
     private func updateContent(apps: [NSRunningApplication], selectedIndex: Int) {
         guard let container = containerView else { return }
         
-        appsList = apps
         currentApps = apps
         currentSelectedIndex = selectedIndex
         
@@ -192,47 +191,50 @@ final class AppSwitcherOverlay {
         for (index, app) in apps.enumerated() {
             let isSelected = index == selectedIndex
             let itemView = createAppItemView(app: app, isSelected: isSelected, index: index, containerWidth: container.bounds.width, itemHeight: itemHeight)
-            itemView.frame = NSRect(x: 0, y: y - itemHeight, width: container.bounds.width, height: itemHeight)
-            itemView.autoresizingMask = [.width]
+            // Center the items horizontally within the container, account for padding
+            let itemX: CGFloat = 8
+            itemView.frame = NSRect(x: itemX, y: y - itemHeight, width: container.bounds.width - (itemX * 2), height: itemHeight)
             container.addSubview(itemView)
             y -= itemHeight + spacing
         }
     }
-    
-    private var appsList: [NSRunningApplication] = []
     
     private func createAppItemView(app: NSRunningApplication, isSelected: Bool, index: Int, containerWidth: CGFloat, itemHeight: CGFloat) -> NSView {
         let view = NSView()
         view.wantsLayer = true
         
         let iconSize: CGFloat = theme == .comfortable ? 32 : (theme == .compact ? 28 : 30)
-        let padding: CGFloat = theme == .comfortable ? 16 : (theme == .compact ? 12 : 14)
         let iconPadding: CGFloat = theme == .comfortable ? 12 : 10
+        
+        // Selection indicator - subtle but clear
+        if isSelected {
+            view.layer?.backgroundColor = NSColor.controlAccentColor.withAlphaComponent(0.25).cgColor
+            view.layer?.cornerRadius = 8
+        }
         
         // Icon
         let iconView = NSImageView(frame: NSRect(x: iconPadding, y: (itemHeight - iconSize) / 2, width: iconSize, height: iconSize))
         iconView.image = app.icon ?? NSImage(systemSymbolName: "app", accessibilityDescription: nil)
         iconView.imageScaling = .scaleProportionallyUpOrDown
-        iconView.autoresizingMask = []
         view.addSubview(iconView)
         
-        // App name - dynamically sized to fit container
+        // App name
         let nameLabel = NSTextField(labelWithString: app.localizedName ?? "Unknown")
-        nameLabel.font = NSFont.systemFont(ofSize: theme == .comfortable ? 15 : (theme == .compact ? 13 : 14), weight: isSelected ? .semibold : .regular)
-        nameLabel.textColor = .labelColor
+        nameLabel.font = NSFont.systemFont(ofSize: theme == .comfortable ? 15 : (theme == .compact ? 13 : 14), weight: isSelected ? .bold : .medium)
+        
+        // Legibility fix: Use adaptive colors
+        if theme == .comfortable {
+            // HUD material is usually dark, force white for better contrast
+            nameLabel.textColor = .white
+        } else {
+            nameLabel.textColor = .labelColor
+        }
+        
         nameLabel.alignment = .left
         let nameX = iconSize + iconPadding + 12
-        let nameWidth = containerWidth - nameX - padding
+        let nameWidth = containerWidth - nameX - 12
         nameLabel.frame = NSRect(x: nameX, y: (itemHeight - 18) / 2, width: nameWidth, height: 18)
-        nameLabel.autoresizingMask = [.width]
         view.addSubview(nameLabel)
-        
-        // Selection indicator
-        if isSelected {
-            view.layer?.backgroundColor = NSColor.controlAccentColor.withAlphaComponent(0.2).cgColor
-        } else {
-            view.layer?.backgroundColor = NSColor.clear.cgColor
-        }
         
         return view
     }
