@@ -56,6 +56,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             self?.appSwitcher.handleAssignKey(letter: letter)
         }
         
+        hotkeyManager.onLongPress = { [weak self] in
+            self?.appSwitcher.handleLongPress()
+        }
+        
         hotkeyManager.onKeyRelease = { [weak self] in
             self?.appSwitcher.handleKeyRelease()
         }

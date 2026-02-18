@@ -5,10 +5,27 @@ final class HotkeyManager {
     var onSwitchKey: ((Character) -> Void)?
     var onAssignKey: ((Character) -> Void)?
     var onKeyRelease: (() -> Void)?
+    var onLongPress: (() -> Void)?
 
     private var eventTap: CFMachPort?
     private var wasRightCommandPressed = false
+    private var longPressWorkItem: DispatchWorkItem?
     private let eventMask = (1 << CGEventType.keyDown.rawValue) | (1 << CGEventType.keyUp.rawValue) | (1 << CGEventType.flagsChanged.rawValue)
+
+    private func startLongPressTimer() {
+        longPressWorkItem?.cancel()
+        let item = DispatchWorkItem { [weak self] in
+            self?.onLongPress?()
+        }
+        longPressWorkItem = item
+        // 3 seconds feels more natural than 5, but still intentional
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: item)
+    }
+
+    private func cancelLongPressTimer() {
+        longPressWorkItem?.cancel()
+        longPressWorkItem = nil
+    }
 
     func start() {
         guard eventTap == nil else { return }
@@ -26,32 +43,37 @@ final class HotkeyManager {
             }
 
             let flags = nsEvent.modifierFlags
-            
-            // Check for Right Command specifically, NOT Left Command.
-            // NX_DEVICE_LCMD_KEYMASK = 0x08 (left command)
-            // NX_DEVICE_RCMD_KEYMASK = 0x10 (right command)
             let cgFlags = cgEvent.flags.rawValue
-            let hasRightCommand = (cgFlags & 0x10) != 0  // Right Command mask
-            let hasLeftCommand = (cgFlags & 0x08) != 0   // Left Command mask
+            let hasRightCommand = (cgFlags & 0x10) != 0
+            let hasLeftCommand = (cgFlags & 0x08) != 0
             
-            // Handle flags changed (modifier keys)
             if type == .flagsChanged {
+                let isPressedNow = hasRightCommand && !hasLeftCommand
                 let wasPressed = hotkeyManager.wasRightCommandPressed
-                hotkeyManager.wasRightCommandPressed = hasRightCommand && !hasLeftCommand
                 
-                // If Right Command was just released (was pressed, now not)
-                if wasPressed && !hotkeyManager.wasRightCommandPressed {
+                hotkeyManager.wasRightCommandPressed = isPressedNow
+                
+                if !wasPressed && isPressedNow {
+                    // Just pressed
+                    hotkeyManager.startLongPressTimer()
+                } else if wasPressed && !isPressedNow {
+                    // Just released
+                    hotkeyManager.cancelLongPressTimer()
                     hotkeyManager.onKeyRelease?()
                 }
                 return Unmanaged.passRetained(cgEvent)
             }
             
-            // Handle key release
+            // On any actual key down (Command + Key), cancel the long press timer
+            // so the cheat sheet doesn't pop up while you are actively switching.
+            if type == .keyDown {
+                hotkeyManager.cancelLongPressTimer()
+            }
+
             if type == .keyUp {
                 return Unmanaged.passRetained(cgEvent)
             }
             
-            // Handle key down
             guard type == .keyDown else {
                 return Unmanaged.passRetained(cgEvent)
             }

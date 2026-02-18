@@ -97,6 +97,99 @@ final class AppSwitcherOverlay {
         }
     }
     
+    func showCheatSheet(assignments: [AppAssignment]) {
+        DispatchQueue.main.async {
+            guard !assignments.isEmpty else { return }
+            
+            self.hideTimer?.cancel()
+            self.hideTimer = nil
+            
+            self.ensureWindow()
+            
+            // Calculate grid size (2 columns)
+            let columns = 2
+            let rows = Int(ceil(Double(assignments.count) / Double(columns)))
+            let itemHeight: CGFloat = 40
+            let itemWidth: CGFloat = 200
+            let padding: CGFloat = 20
+            
+            let totalWidth = (itemWidth * CGFloat(columns)) + (padding * 3)
+            let totalHeight = (itemHeight * CGFloat(rows)) + (padding * 3) + 40 // room for header
+            
+            let size = NSSize(width: totalWidth, height: totalHeight)
+            
+            if let window = self.window, let container = self.containerView {
+                window.setContentSize(size)
+                container.frame = NSRect(origin: .zero, size: size)
+                self.effectView?.frame = container.bounds
+                
+                if let screen = NSScreen.main {
+                    window.setFrameOrigin(NSPoint(
+                        x: screen.visibleFrame.midX - size.width / 2,
+                        y: screen.visibleFrame.midY - size.height / 2
+                    ))
+                }
+                
+                // Clear content
+                container.subviews.forEach { if $0 !== self.effectView { $0.removeFromSuperview() } }
+                
+                // Header
+                let header = NSTextField(labelWithString: "AppCmd Cheat Sheet")
+                header.font = NSFont.systemFont(ofSize: 16, weight: .bold)
+                header.textColor = self.theme == .comfortable ? .white : .labelColor
+                header.frame = NSRect(x: padding, y: totalHeight - padding - 25, width: totalWidth - (padding * 2), height: 25)
+                header.alignment = .center
+                container.addSubview(header)
+                
+                // Grid items
+                var currentY = totalHeight - padding - 45
+                for (index, assignment) in assignments.enumerated() {
+                    let col = index % columns
+                    let x = padding + (CGFloat(col) * (itemWidth + padding))
+                    
+                    let rowView = NSView(frame: NSRect(x: x, y: currentY - itemHeight, width: itemWidth, height: itemHeight))
+                    
+                    let keyLabel = NSTextField(labelWithString: assignment.key.uppercased())
+                    keyLabel.font = NSFont.monospacedSystemFont(ofSize: 14, weight: .bold)
+                    keyLabel.textColor = NSColor.controlAccentColor
+                    keyLabel.frame = NSRect(x: 0, y: (itemHeight - 20) / 2, width: 30, height: 20)
+                    rowView.addSubview(keyLabel)
+                    
+                    let appName = self.getAppName(for: assignment.bundleIdentifier) ?? assignment.bundleIdentifier
+                    let nameLabel = NSTextField(labelWithString: appName)
+                    nameLabel.font = NSFont.systemFont(ofSize: 13, weight: .medium)
+                    nameLabel.textColor = self.theme == .comfortable ? .white : .labelColor
+                    nameLabel.frame = NSRect(x: 35, y: (itemHeight - 18) / 2, width: itemWidth - 35, height: 18)
+                    nameLabel.lineBreakMode = .byTruncatingTail
+                    rowView.addSubview(nameLabel)
+                    
+                    container.addSubview(rowView)
+                    
+                    if col == columns - 1 {
+                        currentY -= itemHeight
+                    }
+                }
+                
+                window.orderFrontRegardless()
+                self.isVisible = true
+            }
+        }
+    }
+    
+    private func getAppName(for bundleIdentifier: String) -> String? {
+        let workspace = NSWorkspace.shared
+        if let app = workspace.runningApplications.first(where: { $0.bundleIdentifier == bundleIdentifier }) {
+            return app.localizedName
+        }
+        if let url = workspace.urlForApplication(withBundleIdentifier: bundleIdentifier),
+           let bundle = Bundle(url: url) {
+            return bundle.localizedInfoDictionary?["CFBundleDisplayName"] as? String
+                ?? bundle.infoDictionary?["CFBundleDisplayName"] as? String
+                ?? url.lastPathComponent.replacingOccurrences(of: ".app", with: "")
+        }
+        return nil
+    }
+
     private func ensureWindow() {
         if window == nil {
             let style: NSWindow.StyleMask = [.borderless]

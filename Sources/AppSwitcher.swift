@@ -36,6 +36,11 @@ final class AppSwitcher {
         configStore.save()
     }
 
+    func handleLongPress() {
+        guard configStore.isUIEnabled else { return }
+        overlay.showCheatSheet(assignments: configStore.getAllAssignments())
+    }
+
     func handleSwitchKey(letter: Character) {
         let lower = Character(letter.lowercased())
         let associatedApps = apps(for: lower)
