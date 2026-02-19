@@ -6,7 +6,7 @@ final class SettingsWindowController: NSWindowController {
     
     convenience init(appSwitcher: AppSwitcher) {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 560, height: 440),
+            contentRect: NSRect(x: 0, y: 0, width: 560, height: 480),
             styleMask: [.titled, .closable, .miniaturizable],
             backing: .buffered,
             defer: false
@@ -29,9 +29,7 @@ final class SettingsWindowController: NSWindowController {
     
     private func setupContent() {
         guard let window = window else { return }
-        
         let contentView = NSView(frame: window.contentView!.bounds)
-        
         var y: CGFloat = contentView.bounds.height - 40
         
         // Theme selection
@@ -39,16 +37,9 @@ final class SettingsWindowController: NSWindowController {
         themeLabel.frame = NSRect(x: 20, y: y, width: 150, height: 20)
         contentView.addSubview(themeLabel)
         
-        let themeSegmented = NSSegmentedControl(labels: ["Clean", "Compact", "Comfortable"], trackingMode: .selectOne, target: self, action: #selector(themeChanged(_:)))
-        themeSegmented.frame = NSRect(x: 180, y: y, width: 340, height: 25)
-        
-        let themeIndex: Int
-        switch configStore.theme {
-        case .clean: themeIndex = 0
-        case .compact: themeIndex = 1
-        case .comfortable: themeIndex = 2
-        }
-        themeSegmented.selectedSegment = themeIndex
+        let themeSegmented = NSSegmentedControl(labels: ["Compact", "Comfortable"], trackingMode: .selectOne, target: self, action: #selector(themeChanged(_:)))
+        themeSegmented.frame = NSRect(x: 180, y: y, width: 200, height: 25)
+        themeSegmented.selectedSegment = configStore.theme == .comfortable ? 1 : 0
         contentView.addSubview(themeSegmented)
         
         y -= 45
@@ -72,6 +63,24 @@ final class SettingsWindowController: NSWindowController {
         
         y -= 45
         
+        // Delay Slider
+        let delayLabel = NSTextField(labelWithString: "Cheat Sheet Delay:")
+        delayLabel.frame = NSRect(x: 20, y: y, width: 150, height: 20)
+        contentView.addSubview(delayLabel)
+        
+        let slider = NSSlider(value: configStore.longPressDelay, minValue: 0.5, maxValue: 5.0, target: self, action: #selector(delayChanged(_:)))
+        slider.frame = NSRect(x: 180, y: y, width: 200, height: 25)
+        contentView.addSubview(slider)
+        
+        let valueLabel = NSTextField(labelWithString: String(format: "%.1fs", configStore.longPressDelay))
+        valueLabel.frame = NSRect(x: 390, y: y, width: 50, height: 20)
+        valueLabel.isEditable = false
+        valueLabel.isBordered = false
+        valueLabel.backgroundColor = .clear
+        contentView.addSubview(valueLabel)
+        
+        y -= 55
+        
         // Assignments section
         let assignmentsLabel = NSTextField(labelWithString: "Key Assignments:")
         assignmentsLabel.font = NSFont.boldSystemFont(ofSize: 14)
@@ -79,8 +88,6 @@ final class SettingsWindowController: NSWindowController {
         contentView.addSubview(assignmentsLabel)
         
         y -= 25
-        
-        // Concise Instruction below header
         let helpLabel = NSTextField(labelWithString: "Assign: Focus App + Right ⌘ + Option + [Letter]")
         helpLabel.font = NSFont.systemFont(ofSize: 12, weight: .regular)
         helpLabel.textColor = .secondaryLabelColor
@@ -88,8 +95,6 @@ final class SettingsWindowController: NSWindowController {
         contentView.addSubview(helpLabel)
         
         y -= 30
-        
-        // Footer (Created with love) - Positioned at the very bottom
         let version = AppVersion.current
         let footerLabel = NSTextField(labelWithString: "v\(version) • Created with love by Utkarsh Raj")
         footerLabel.font = NSFont.systemFont(ofSize: 10, weight: .light)
@@ -98,9 +103,7 @@ final class SettingsWindowController: NSWindowController {
         footerLabel.frame = NSRect(x: 0, y: 10, width: contentView.bounds.width, height: 15)
         contentView.addSubview(footerLabel)
         
-        // List assignments
         let assignments = configStore.getAllAssignments()
-        
         if assignments.isEmpty {
             let noAssignmentsLabel = NSTextField(labelWithString: "No keys assigned.")
             noAssignmentsLabel.frame = NSRect(x: 20, y: y, width: 540, height: 20)
@@ -108,25 +111,20 @@ final class SettingsWindowController: NSWindowController {
             contentView.addSubview(noAssignmentsLabel)
         } else {
             let listHeight = CGFloat(assignments.count) * 32
-            // Adjusted height to make room for footer (y - 35 instead of y - 10)
             let listScrollView = NSScrollView(frame: NSRect(x: 10, y: 35, width: 540, height: y - 35))
             listScrollView.hasVerticalScroller = true
             listScrollView.drawsBackground = false
-            
             let listView = NSView(frame: NSRect(x: 0, y: 0, width: 520, height: max(listScrollView.bounds.height, listHeight)))
             var rowY = listView.bounds.height - 25
-            
             for assignment in assignments {
                 let keyLabel = NSTextField(labelWithString: "⌘ + \(assignment.key.uppercased()):")
                 keyLabel.frame = NSRect(x: 10, y: rowY, width: 80, height: 20)
                 listView.addSubview(keyLabel)
-                
                 let appName = getAppName(for: assignment.bundleIdentifier) ?? assignment.bundleIdentifier
                 let appLabel = NSTextField(labelWithString: appName)
                 appLabel.frame = NSRect(x: 100, y: rowY, width: 180, height: 20)
                 appLabel.lineBreakMode = .byTruncatingTail
                 listView.addSubview(appLabel)
-                
                 let actionPopup = NSPopUpButton(frame: NSRect(x: 290, y: rowY - 2, width: 80, height: 22))
                 actionPopup.addItem(withTitle: "Hide")
                 actionPopup.addItem(withTitle: "Cycle")
@@ -135,28 +133,31 @@ final class SettingsWindowController: NSWindowController {
                 actionPopup.action = #selector(actionChanged(_:))
                 actionPopup.identifier = NSUserInterfaceItemIdentifier("\(assignment.key)_action")
                 listView.addSubview(actionPopup)
-                
                 let removeButton = NSButton(title: "Remove", target: self, action: #selector(removeAssignment(_:)))
                 removeButton.bezelStyle = .rounded
                 removeButton.frame = NSRect(x: 380, y: rowY - 2, width: 80, height: 24)
                 removeButton.identifier = NSUserInterfaceItemIdentifier(assignment.key)
                 listView.addSubview(removeButton)
-                
                 rowY -= 32
             }
-            
             listScrollView.documentView = listView
             contentView.addSubview(listScrollView)
         }
-        
         window.contentView = contentView
     }
     
     @objc private func themeChanged(_ sender: NSSegmentedControl) {
-        let themes: [SwitcherTheme] = [.clean, .compact, .comfortable]
+        let themes: [SwitcherTheme] = [.compact, .comfortable]
         if sender.selectedSegment < themes.count {
             appSwitcher?.setTheme(themes[sender.selectedSegment])
         }
+    }
+    
+    @objc private func delayChanged(_ sender: NSSlider) {
+        configStore.longPressDelay = sender.doubleValue
+        configStore.save()
+        // Refresh to update label
+        setupContent()
     }
     
     @objc private func overlayToggled(_ sender: NSButton) {
@@ -172,7 +173,6 @@ final class SettingsWindowController: NSWindowController {
               let keyString = identifier.components(separatedBy: "_").first,
               let key = keyString.first,
               let assignment = configStore.assignment(for: key) else { return }
-        
         let newAction: WhenFocusedAction = sender.indexOfSelectedItem == 0 ? .hide : .cycle
         var updatedAssignment = assignment
         updatedAssignment.whenFocusedAction = newAction
@@ -185,24 +185,15 @@ final class SettingsWindowController: NSWindowController {
               let key = keyString.first else { return }
         configStore.removeAssignment(for: key)
         configStore.save()
-        setupContent() // Refresh
+        setupContent()
     }
     
     private func getAppName(for bundleIdentifier: String) -> String? {
         let workspace = NSWorkspace.shared
-        if let app = workspace.runningApplications.first(where: { $0.bundleIdentifier == bundleIdentifier }) {
-            return app.localizedName
+        if let app = workspace.runningApplications.first(where: { $0.bundleIdentifier == bundleIdentifier }) { return app.localizedName }
+        if let url = workspace.urlForApplication(withBundleIdentifier: bundleIdentifier), let bundle = Bundle(url: url) {
+            return bundle.localizedInfoDictionary?["CFBundleDisplayName"] as? String ?? bundle.infoDictionary?["CFBundleDisplayName"] as? String ?? url.lastPathComponent.replacingOccurrences(of: ".app", with: "")
         }
-        
-        if let url = workspace.urlForApplication(withBundleIdentifier: bundleIdentifier),
-           let bundle = Bundle(url: url) {
-            return bundle.localizedInfoDictionary?["CFBundleDisplayName"] as? String
-                ?? bundle.infoDictionary?["CFBundleDisplayName"] as? String
-                ?? bundle.localizedInfoDictionary?["CFBundleName"] as? String
-                ?? bundle.infoDictionary?["CFBundleName"] as? String
-                ?? url.lastPathComponent.replacingOccurrences(of: ".app", with: "")
-        }
-        
         return nil
     }
 }

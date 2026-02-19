@@ -1,9 +1,12 @@
 import AppKit
 
-// Ensure only one instance is running
+// Ensure only one instance is running - be aggressive about checking old names too
 let runningApps = NSWorkspace.shared.runningApplications
 let otherInstances = runningApps.filter { 
-    $0.bundleIdentifier == Bundle.main.bundleIdentifier && $0 != NSRunningApplication.current 
+    let bundleID = $0.bundleIdentifier ?? ""
+    let name = $0.localizedName ?? ""
+    let isSameApp = bundleID == "com.clearnote01.appcmd" || name == "appcmd"
+    return isSameApp && $0 != NSRunningApplication.current 
 }
 
 for instance in otherInstances {

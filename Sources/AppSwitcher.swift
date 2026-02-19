@@ -16,10 +16,10 @@ struct AppAssignment: Codable {
 final class AppSwitcher {
     private let workspace = NSWorkspace.shared
     private let configStore = ConfigStore.shared
-    private let hud = HUDWindowController()
     private let overlay = AppSwitcherOverlay()
     private var currentApps: [NSRunningApplication] = []
     private var currentSelectedIndex = 0
+    private var currentLetter: Character?
     
     init() {
         overlay.setTheme(configStore.theme)
@@ -51,10 +51,23 @@ final class AppSwitcher {
         let associatedApps = apps(for: lower)
         let showUI = configStore.isOverlayEnabled
 
+        // If we are already holding Right Command and pressing the SAME letter,
+        // we should ALWAYS just cycle forward.
+        if lower == currentLetter && !currentApps.isEmpty {
+            cycleForward(showUI: showUI)
+            return
+        }
+
+        // New interaction (different letter or first press)
+        currentLetter = lower
+        currentApps = associatedApps
+
         if let assignment = configStore.assignment(for: lower) {
             handleStaticAssignment(letter: lower, assignment: assignment, apps: associatedApps, showUI: showUI)
         } else {
-            cycleDynamic(letter: lower, apps: associatedApps, showUI: showUI)
+            // No assignment, just start cycling
+            currentSelectedIndex = -1 // Let cycleDynamic find the start
+            cycleForward(showUI: showUI)
         }
     }
     
@@ -69,7 +82,6 @@ final class AppSwitcher {
                 return first == lower
             }
         
-        // Ensure the assigned app is included if it's running, even if its name doesn't match the letter
         if let assignment = configStore.assignment(for: lower),
            let assignedApp = workspace.runningApplications.first(where: { $0.bundleIdentifier == assignment.bundleIdentifier }) {
             if !results.contains(assignedApp) {
@@ -81,17 +93,15 @@ final class AppSwitcher {
     }
 
     func handleKeyRelease() {
-        // Hide overlay when Right Command is released
         overlay.hide()
+        currentLetter = nil
     }
     
     func updateOverlaySelection(offset: Int) {
         guard !currentApps.isEmpty else { return }
         currentSelectedIndex = (currentSelectedIndex + offset + currentApps.count) % currentApps.count
         overlay.show(apps: currentApps, selectedIndex: currentSelectedIndex)
-        // Reset the hide timer when cycling
         overlay.scheduleHide(after: 8.0)
-        // Activate the newly selected app
         if currentSelectedIndex < currentApps.count {
             activate(app: currentApps[currentSelectedIndex])
         }
@@ -101,6 +111,7 @@ final class AppSwitcher {
         overlay.hide()
         currentApps = []
         currentSelectedIndex = 0
+        currentLetter = nil
     }
 
     func handleAssignKey(letter: Character) {
@@ -120,103 +131,42 @@ final class AppSwitcher {
         configStore.setAssignment(assignment, for: lower)
         configStore.save()
 
-        let name = frontmost.localizedName ?? bundleIdentifier
-        hud.show(message: "Assigned '\(lower)' to \(name)")
+        if configStore.isOverlayEnabled {
+            overlay.show(apps: [frontmost], selectedIndex: 0)
+            overlay.scheduleHide(after: 2.0)
+        }
     }
 
     private func handleStaticAssignment(letter: Character, assignment: AppAssignment, apps: [NSRunningApplication], showUI: Bool = false) {
         let matchingRunning = workspace.runningApplications.first { $0.bundleIdentifier == assignment.bundleIdentifier }
         let frontmost = workspace.frontmostApplication
 
-        // If UI is enabled and we have multiple apps, show overlay
-        if showUI && apps.count > 1 {
-            currentApps = apps
-            
-            if let app = matchingRunning {
-                if let front = frontmost, front == app {
-                    // App is already focused
-                    switch assignment.whenFocusedAction {
-                    case .hide:
-                        app.hide()
-                        // Still show overlay with other apps
-                        if let assignedIndex = apps.firstIndex(of: app) {
-                            currentSelectedIndex = (assignedIndex + 1) % apps.count
-                        } else {
-                            currentSelectedIndex = 0
-                        }
-                        overlay.show(apps: apps, selectedIndex: currentSelectedIndex)
-                        if currentSelectedIndex < apps.count {
-                            activate(app: apps[currentSelectedIndex])
-                        }
-                        overlay.scheduleHide(after: 8.0)
-                    case .cycle:
-                        // Cycle to next app
-                        if let assignedIndex = apps.firstIndex(of: app) {
-                            currentSelectedIndex = (assignedIndex + 1) % apps.count
-                        } else {
-                            currentSelectedIndex = 0
-                        }
-                        let target = apps[currentSelectedIndex]
-                        overlay.show(apps: apps, selectedIndex: currentSelectedIndex)
-                        activate(app: target)
-                        overlay.scheduleHide(after: 8.0)
-                    }
-                } else {
-                    // App is running but not focused - activate it and show overlay
-                    if let assignedIndex = apps.firstIndex(of: app) {
-                        currentSelectedIndex = assignedIndex
-                    } else {
-                        currentSelectedIndex = 0
-                    }
-                    overlay.show(apps: apps, selectedIndex: currentSelectedIndex)
-                    activate(app: app)
-                    overlay.scheduleHide(after: 8.0)
-                }
-            } else {
-                // Assigned app not running - launch it and show overlay
-                launch(assignment: assignment)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    // Refresh the list after launch
-                    let updatedApps = self.apps(for: letter)
-                    
-                    if let launchedApp = self.workspace.runningApplications.first(where: { $0.bundleIdentifier == assignment.bundleIdentifier }),
-                       let index = updatedApps.firstIndex(of: launchedApp) {
-                        self.currentApps = updatedApps
-                        self.currentSelectedIndex = index
-                        self.overlay.show(apps: updatedApps, selectedIndex: index)
-                        self.overlay.scheduleHide(after: 8.0)
-                    }
-                }
-            }
-            return
-        }
-
-        // Fallback to HUD if UI enabled but ONLY IF overlay is not shown
         if let app = matchingRunning {
             if let front = frontmost, front == app {
-                switch assignment.whenFocusedAction {
-                case .hide:
-                    app.hide()
-                case .cycle:
-                    cycleDynamic(letter: letter, apps: apps, showUI: showUI)
-                }
+                // Already on assigned app, cycle forward
+                cycleForward(showUI: showUI)
+                return
             } else {
+                // Not on assigned app, jump to it
                 activate(app: app)
-                // Only show HUD if multi-app overlay is NOT active
+                if let index = apps.firstIndex(of: app) {
+                    currentSelectedIndex = index
+                }
                 if showUI {
-                    let name = app.localizedName ?? assignment.bundleIdentifier
-                    hud.show(message: name, appIcon: app.icon)
+                    overlay.show(apps: apps, selectedIndex: currentSelectedIndex)
+                    overlay.scheduleHide(after: apps.count > 1 ? 8.0 : 2.0)
                 }
             }
         } else {
+            // Assigned app not running - launch it
             launch(assignment: assignment)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                // Only show HUD if multi-app overlay is NOT active
-                if showUI,
-                   let appURL = self.getAppURL(for: assignment),
-                   let app = self.workspace.runningApplications.first(where: { $0.bundleURL == appURL }) {
-                    let name = app.localizedName ?? assignment.bundleIdentifier
-                    self.hud.show(message: name, appIcon: app.icon)
+            if showUI {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    if let appURL = self.getAppURL(for: assignment),
+                       let app = self.workspace.runningApplications.first(where: { $0.bundleURL == appURL }) {
+                        self.overlay.show(apps: [app], selectedIndex: 0)
+                        self.overlay.scheduleHide(after: 2.0)
+                    }
                 }
             }
         }
@@ -232,35 +182,30 @@ final class AppSwitcher {
         return nil
     }
 
-    private func cycleDynamic(letter: Character, apps: [NSRunningApplication], showUI: Bool = false) {
+    private func cycleForward(showUI: Bool = false) {
+        let apps = currentApps
         guard !apps.isEmpty else { return }
         
-        currentApps = apps
         let frontmost = workspace.frontmostApplication
-
-        let target: NSRunningApplication
-        if let front = frontmost, let idx = apps.firstIndex(of: front) {
+        
+        // If we have a valid index and the frontmost is what we expect, just increment.
+        // Otherwise, find where we are based on the frontmost app.
+        if currentSelectedIndex >= 0 && currentSelectedIndex < apps.count && apps[currentSelectedIndex] == frontmost {
+            currentSelectedIndex = (currentSelectedIndex + 1) % apps.count
+        } else if let front = frontmost, let idx = apps.firstIndex(of: front) {
             currentSelectedIndex = (idx + 1) % apps.count
-            target = apps[currentSelectedIndex]
         } else {
             currentSelectedIndex = 0
-            target = apps[0]
         }
 
-        if showUI && apps.count > 1 {
+        let target = apps[currentSelectedIndex]
+        activate(app: target)
+        
+        if showUI {
             overlay.show(apps: apps, selectedIndex: currentSelectedIndex)
-            activate(app: target)
             overlay.scheduleHide(after: 8.0)
-        } else {
-            activate(app: target)
-            // Show HUD only if we are NOT showing the multi-app overlay
-            if showUI {
-                let name = target.localizedName ?? "App"
-                hud.show(message: name, appIcon: target.icon)
-            }
         }
     }
-
 
     private func activate(app: NSRunningApplication) {
         app.activate(options: [.activateAllWindows, .activateIgnoringOtherApps])
@@ -278,20 +223,9 @@ final class AppSwitcher {
             url = nil
         }
 
-        guard let appURL = url else {
-            print("Cannot locate app for bundle id \(assignment.bundleIdentifier)")
-            return
-        }
+        guard let appURL = url else { return }
 
-        do {
-            try workspace.launchApplication(
-                at: appURL,
-                options: [.default],
-                configuration: [:]
-            )
-        } catch {
-            print("Failed to launch app at \(appURL.path): \(error)")
-        }
+        let configuration = NSWorkspace.OpenConfiguration()
+        workspace.openApplication(at: appURL, configuration: configuration) { _, _ in }
     }
 }
-

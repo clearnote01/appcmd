@@ -14,12 +14,12 @@ final class HotkeyManager {
 
     private func startLongPressTimer() {
         longPressWorkItem?.cancel()
+        let delay = ConfigStore.shared.longPressDelay
         let item = DispatchWorkItem { [weak self] in
             self?.onLongPress?()
         }
         longPressWorkItem = item
-        // 2 seconds feels more natural
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: item)
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: item)
     }
 
     private func cancelLongPressTimer() {

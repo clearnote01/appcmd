@@ -1,5 +1,10 @@
 import Foundation
 
+enum SwitcherTheme: String, Codable {
+    case compact
+    case comfortable
+}
+
 final class ConfigStore {
     static let shared = ConfigStore()
     static let configUpdatedNotification = Notification.Name("ConfigStoreUpdated")
@@ -9,6 +14,7 @@ final class ConfigStore {
         var isOverlayEnabled: Bool = false
         var isCheatSheetEnabled: Bool = true
         var theme: SwitcherTheme = .comfortable
+        var longPressDelay: Double = 1.5
     }
 
     private var config = Config()
@@ -27,6 +33,11 @@ final class ConfigStore {
     var theme: SwitcherTheme {
         get { config.theme }
         set { config.theme = newValue }
+    }
+
+    var longPressDelay: Double {
+        get { config.longPressDelay }
+        set { config.longPressDelay = newValue }
     }
 
     private init() {
@@ -94,4 +105,3 @@ final class ConfigStore {
         config.assignments.removeAll { $0.key == keyString }
     }
 }
-
