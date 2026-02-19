@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppCmd - The Fastest App Switcher for macOS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #1d1d1f;
+            --accent: #0071e3;
+            --secondary: #86868b;
+            --card-bg: rgba(245, 245, 247, 0.8);
+            --code-bg: #1d1d1f;
+            --code-text: #f5f5f7;
+            --gradient: linear-gradient(180deg, #f5f5f7 0%, #ffffff 100%);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #000000;
+                --text: #f5f5f7;
+                --secondary: #a1a1a6;
+                --card-bg: rgba(28, 28, 30, 0.8);
+                --gradient: linear-gradient(180deg, #1c1c1e 0%, #000000 100%);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gradient);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* Hero Section */
+        header {
+            padding: 100px 0 60px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 80px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+            background: linear-gradient(180deg, var(--text) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            font-size: 24px;
+            color: var(--secondary);
+            font-weight: 400;
+            margin-bottom: 40px;
+        }
+
+        .hero-screenshot {
+            margin-bottom: 100px;
+            perspective: 1000px;
+        }
+
+        .main-overlay-img {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 16px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.05);
+            display: block;
+            margin: 0 auto;
+            transition: transform 0.5s ease;
+        }
+
+        /* Brew Section */
+        .install-box {
+            background-color: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 48px;
+            margin-bottom: 120px;
+            border: 1px solid rgba(134, 134, 139, 0.1);
+        }
+
+        .install-box h2 {
+            font-size: 32px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .code-container {
+            position: relative;
+            background-color: var(--code-bg);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
+        }
+
+        code-block {
+            display: block;
+            color: var(--code-text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            line-height: 1.6;
+            white-space: pre;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover { background: rgba(255,255,255,0.2); }
+        .copy-btn.copied { background: #34c759; border-color: #34c759; }
+
+        /* Mixed Features Section */
+        .feature-row {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            margin-bottom: 120px;
+        }
+
+        .feature-row.reverse { flex-direction: row-reverse; }
+
+        .feature-text { flex: 1; }
+        .feature-image { flex: 1.2; }
+
+        .feature-text h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+
+        .feature-text p {
+            font-size: 18px;
+            color: var(--secondary);
+            margin-bottom: 24px;
+        }
+
+        .small-screenshot {
+            width: 100%;
+            border-radius: 14px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            border: 1px solid rgba(134, 134, 139, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            padding: 100px 0 60px;
+            text-align: center;
+            color: var(--secondary);
+            font-size: 14px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            padding: 14px 32px;
+            border-radius: 980px;
+            font-weight: 600;
+            font-size: 17px;
+            transition: all 0.2s ease;
+        }
+
+        @media (max-width: 800px) {
+            h1 { font-size: 56px; }
+            .feature-row { flex-direction: column !important; gap: 40px; text-align: center; }
+            .feature-row.reverse { flex-direction: column !important; }
+            .install-box { padding: 32px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AppCmd</h1>
+            <p class="tagline">The fastest way to switch application windows on macOS :)</p>
+            <div style="display: flex; gap: 16px; justify-content: center; margin-top: 32px;">
+                <a href="#install" class="btn" style="background: var(--accent); color: white;">🍺 Install via Brew</a>
+                <a href="https://github.com/clearnote01/appcmd" class="btn" style="background: var(--card-bg); color: var(--text); border: 1px solid rgba(134, 134, 139, 0.2);">🐙 View on GitHub</a>
+            </div>
+        </header>
+
+        <section class="hero-screenshot">
+            <img src="./assets/overlay.png" alt="AppCmd Overlay" class="main-overlay-img" id="hero-img">
+        </section>
+
+        <section id="install" class="install-box">
+            <h2>Quick Installation</h2>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyInstallCommand(this)">Copy</button>
+                <code-block id="install-cmd">brew tap clearnote01/tap
+brew install appcmd
+brew services start appcmd</code-block>
+            </div>
+        </section>
+
+        <!-- Feature 1: Cheat Sheet -->
+        <section class="feature-row">
+            <div class="feature-text">
+                <h3>📜 Visual Cheat Sheet</h3>
+                <p>Can't remember your shortcuts? Just hold the Right Command key for a moment to reveal all your custom assignments in an elegant grid.</p>
+            </div>
+            <div class="feature-image">
+                <img src="./assets/cheatsheet.png" alt="Cheat Sheet" class="small-screenshot">
+            </div>
+        </section>
+
+        <!-- Feature 2: Static Mapping -->
+        <section class="feature-row reverse">
+            <div class="feature-text">
+                <h3>🎯 Muscle Memory</h3>
+                <p>Assign 'A' to Arc, 'S' to Safari, or 'O' for Outlook. Your most important apps are always exactly one key away.</p>
+            </div>
+            <div class="feature-image">
+                <img src="./assets/settings.png" alt="Settings" class="small-screenshot">
+            </div>
+        </section>
+
+        <!-- Feature 3: Minimal & Clean -->
+        <section class="feature-row">
+            <div class="feature-text">
+                <h3>🎨 Modern Aesthetics</h3>
+                <p>Designed to feel like a native part of macOS. Translucent materials, smooth animations, and zero configuration required to start.</p>
+            </div>
+            <div class="feature-image">
+                <img src="./assets/menubar.png" alt="Menu Bar" class="small-screenshot">
+            </div>
+        </section>
+
+        <footer>
+            <p>v1.1.2 • Crafted with ✨ by <a href="https://github.com/clearnote01" style="color: inherit;">Utkarsh Raj</a></p>
+            <p style="margin-top: 12px; opacity: 0.6;">Open source under MIT License.</p>
+        </footer>
+    </div>
+
+    <script>
+        function copyInstallCommand(btn) {
+            const cmd = document.getElementById('install-cmd').innerText;
+            navigator.clipboard.writeText(cmd).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Simple tilt effect for hero
+        const hero = document.getElementById('hero-img');
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            hero.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+        });
+    </script>
+</body>
+</html>
