@@ -17,7 +17,7 @@ final class ConfigStore {
         var longPressDelay: Double?
         
         // Helper to get non-optional values with defaults
-        var overlayEnabled: Bool { isOverlayEnabled ?? false }
+        var overlayEnabled: Bool { isOverlayEnabled ?? true }
         var cheatSheetEnabled: Bool { isCheatSheetEnabled ?? true }
         var activeTheme: SwitcherTheme { theme ?? .comfortable }
         var delay: Double { longPressDelay ?? 1.5 }
