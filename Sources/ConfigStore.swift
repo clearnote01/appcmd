@@ -11,32 +11,38 @@ final class ConfigStore {
 
     private struct Config: Codable {
         var assignments: [AppAssignment] = []
-        var isOverlayEnabled: Bool = false
-        var isCheatSheetEnabled: Bool = true
-        var theme: SwitcherTheme = .comfortable
-        var longPressDelay: Double = 1.5
+        var isOverlayEnabled: Bool?
+        var isCheatSheetEnabled: Bool?
+        var theme: SwitcherTheme?
+        var longPressDelay: Double?
+        
+        // Helper to get non-optional values with defaults
+        var overlayEnabled: Bool { isOverlayEnabled ?? false }
+        var cheatSheetEnabled: Bool { isCheatSheetEnabled ?? true }
+        var activeTheme: SwitcherTheme { theme ?? .comfortable }
+        var delay: Double { longPressDelay ?? 1.5 }
     }
 
     private var config = Config()
     private let fileURL: URL
     
     var isOverlayEnabled: Bool {
-        get { config.isOverlayEnabled }
+        get { config.overlayEnabled }
         set { config.isOverlayEnabled = newValue }
     }
     
     var isCheatSheetEnabled: Bool {
-        get { config.isCheatSheetEnabled }
+        get { config.cheatSheetEnabled }
         set { config.isCheatSheetEnabled = newValue }
     }
     
     var theme: SwitcherTheme {
-        get { config.theme }
+        get { config.activeTheme }
         set { config.theme = newValue }
     }
 
     var longPressDelay: Double {
-        get { config.longPressDelay }
+        get { config.delay }
         set { config.longPressDelay = newValue }
     }
 
@@ -55,7 +61,6 @@ final class ConfigStore {
         }
 
         self.fileURL = baseDir.appendingPathComponent("config.json")
-        print("Config Path: \(fileURL.path)")
         load()
     }
 
