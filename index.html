@@ -68,18 +68,30 @@
             margin-bottom: 40px;
         }
 
+        .showcase-header {
+            text-align: center;
+            margin: 80px 0 20px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
         .main-overlay-img {
             width: 100%;
             border-radius: 12px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-            margin: 60px 0 100px;
+            margin-bottom: 100px;
+            perspective: 1000px;
+            transition: transform 0.1s ease-out;
         }
 
         .install-box {
             background-color: var(--card-bg);
             border-radius: 20px;
             padding: 40px;
-            margin-bottom: 100px;
+            margin: 100px 0;
         }
 
         .install-box h2 {
@@ -93,6 +105,7 @@
             background-color: var(--code-bg);
             border-radius: 12px;
             padding: 24px;
+            margin-bottom: 24px;
         }
 
         code-block {
@@ -120,8 +133,19 @@
 
         .copy-btn.copied { background: #34c759; }
 
+        .permission-notice {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .permission-text { flex: 1; }
+        .permission-img { width: 240px; border-radius: 8px; border: 1px solid var(--border); }
+
         .feature-section {
-            padding: 60px 0;
+            padding: 80px 0;
             border-top: 1px solid var(--border);
         }
 
@@ -176,12 +200,12 @@
         }
 
         .btn:hover { opacity: 0.8; }
-
         .btn svg { width: 18px; height: 18px; fill: currentColor; }
 
         @media (max-width: 768px) {
             h1 { font-size: 44px; }
             .feature-grid { grid-template-columns: 1fr !important; gap: 32px; text-align: center; }
+            .permission-notice { flex-direction: column; text-align: center; }
             header { padding: 60px 0 40px; }
         }
     </style>
@@ -194,7 +218,7 @@
             <div style="display: flex; gap: 12px; justify-content: center; margin-top: 24px;">
                 <a href="#install" class="btn" style="background: var(--accent); color: white;">
                     <svg viewBox="0 0 24 24"><path d="M18.66 12.01c.01.21.03.41.03.61 0 4.1-3.32 7.42-7.42 7.42-4.1 0-7.42-3.32-7.42-7.42 0-3.69 2.69-6.73 6.17-7.3 1-.16 2.01-.16 2.92.01l1.41-1.41C13.23 3.4 11.75 3.27 10.3 3.5c-4.8.78-8.52 4.96-8.52 10.03 0 5.6 4.54 10.14 10.14 10.14s10.14-4.54 10.14-10.14c0-.52-.04-1.04-.13-1.54l-1.27.02zm-1.12-6.52l-1.42 1.42c.42.36.78.78 1.07 1.25l1.46-.84a8.1 8.1 0 0 0-1.11-1.83zM15.11 3.5c-.86-.28-1.78-.44-2.73-.44-.31 0-.61.02-.91.06L12.9 4.55c.57-.14 1.16-.21 1.77-.21.15 0 .31.01.46.02l-.02-1.06zM22.51 9.49l-1.44.52c.16.51.26 1.05.29 1.6l1.27-.02c-.04-.84-.2-1.64-.46-2.4l.34.3zm-3.41-5.11a9.92 9.92 0 0 0-3.23-2.07l-.4 1.22a8.67 8.67 0 0 1 2.82 1.81l.81-.96z"/></svg>
-                    Install
+                    Install via Brew
                 </a>
                 <a href="https://github.com/clearnote01/appcmd" class="btn" style="background: var(--card-bg); color: var(--text); border: 1px solid var(--border);">
                     <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.82 1.102.82 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
@@ -203,17 +227,6 @@
             </div>
         </header>
 
-        <section id="install" class="install-box">
-            <div class="code-container">
-                <button class="copy-btn" onclick="copyInstallCommand(this)">Copy</button>
-                <code-block id="install-cmd">brew tap clearnote01/tap
-brew install appcmd
-brew services start appcmd</code-block>
-            </div>
-        </section>
-
-        <img src="./assets/overlay.png" alt="AppCmd Overlay" class="main-overlay-img">
-
         <section class="feature-section">
             <div class="feature-grid">
                 <div class="feature-text">
@@ -221,7 +234,7 @@ brew services start appcmd</code-block>
                     <p>Hold the Right Command key and press a letter to switch to apps starting with that letter. Tap the key again to cycle through multiple matches.</p>
                 </div>
                 <div class="feature-image">
-                    <img src="./assets/overlay.png" alt="App Switching" class="screenshot">
+                    <img src="./assets/cycling.png" alt="App Switching" class="screenshot">
                 </div>
             </div>
         </section>
@@ -250,8 +263,28 @@ brew services start appcmd</code-block>
             </div>
         </section>
 
+        <h3 class="showcase-header">Showcase</h3>
+        <img src="./assets/overlay.png" alt="AppCmd Overlay" class="main-overlay-img" id="hero-img">
+
+        <section id="install" class="install-box">
+            <h2>Quick Installation</h2>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyInstallCommand(this)">Copy</button>
+                <code-block id="install-cmd">brew tap clearnote01/tap
+brew install appcmd
+brew services start appcmd</code-block>
+            </div>
+            
+            <div class="permission-notice">
+                <div class="permission-text">
+                    <p>AppCmd requires <b>Accessibility</b> and <b>Input Monitoring</b> permissions to detect the Right Command key and manage window switching.</p>
+                </div>
+                <img src="./assets/accessibility.png" alt="Permissions" class="permission-img">
+            </div>
+        </section>
+
         <footer>
-            <p>v1.1.2 • Crafted with ✨ by <a href="https://github.com/clearnote01" style="color: inherit;">Utkarsh Raj</a></p>
+            <p>v1.1.4 • Crafted with ✨ by <a href="https://github.com/clearnote01" style="color: inherit;">Utkarsh Raj</a></p>
             <p style="margin-top: 8px; opacity: 0.6;">Open source under MIT License.</p>
         </footer>
     </div>
@@ -267,6 +300,15 @@ brew services start appcmd</code-block>
                     btn.innerText = originalText;
                     btn.classList.remove('copied');
                 }, 2000);
+            });
+        }
+
+        const hero = document.getElementById('hero-img');
+        if (hero) {
+            document.addEventListener('mousemove', (e) => {
+                const x = (window.innerWidth / 2 - e.pageX) / 60;
+                const y = (window.innerHeight / 2 - e.pageY) / 60;
+                hero.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
             });
         }
     </script>
