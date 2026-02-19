@@ -191,7 +191,7 @@ final class AppSwitcher {
             return
         }
 
-        // Fallback to HUD if UI enabled but only one app
+        // Fallback to HUD if UI enabled but ONLY IF overlay is not shown
         if let app = matchingRunning {
             if let front = frontmost, front == app {
                 switch assignment.whenFocusedAction {
@@ -202,6 +202,7 @@ final class AppSwitcher {
                 }
             } else {
                 activate(app: app)
+                // Only show HUD if multi-app overlay is NOT active
                 if showUI {
                     let name = app.localizedName ?? assignment.bundleIdentifier
                     hud.show(message: name, appIcon: app.icon)
@@ -210,6 +211,7 @@ final class AppSwitcher {
         } else {
             launch(assignment: assignment)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                // Only show HUD if multi-app overlay is NOT active
                 if showUI,
                    let appURL = self.getAppURL(for: assignment),
                    let app = self.workspace.runningApplications.first(where: { $0.bundleURL == appURL }) {
@@ -251,6 +253,7 @@ final class AppSwitcher {
             overlay.scheduleHide(after: 8.0)
         } else {
             activate(app: target)
+            // Show HUD only if we are NOT showing the multi-app overlay
             if showUI {
                 let name = target.localizedName ?? "App"
                 hud.show(message: name, appIcon: target.icon)
