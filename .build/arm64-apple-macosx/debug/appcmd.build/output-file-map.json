@@ -1,0 +1,47 @@
+{
+  "": {
+    "swift-dependencies": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/master.swiftdeps"
+  },
+  "/Users/970uraj/dev/rcmd/Sources/AppSwitcher.swift": {
+    "dependencies": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/AppSwitcher.d",
+    "object": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/AppSwitcher.swift.o",
+    "swiftmodule": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/AppSwitcher~partial.swiftmodule",
+    "swift-dependencies": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/AppSwitcher.swiftdeps"
+  },
+  "/Users/970uraj/dev/rcmd/Sources/AppSwitcherOverlay.swift": {
+    "dependencies": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/AppSwitcherOverlay.d",
+    "object": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/AppSwitcherOverlay.swift.o",
+    "swiftmodule": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/AppSwitcherOverlay~partial.swiftmodule",
+    "swift-dependencies": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/AppSwitcherOverlay.swiftdeps"
+  },
+  "/Users/970uraj/dev/rcmd/Sources/ConfigStore.swift": {
+    "dependencies": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/ConfigStore.d",
+    "object": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/ConfigStore.swift.o",
+    "swiftmodule": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/ConfigStore~partial.swiftmodule",
+    "swift-dependencies": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/ConfigStore.swiftdeps"
+  },
+  "/Users/970uraj/dev/rcmd/Sources/HUDWindowController.swift": {
+    "dependencies": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/HUDWindowController.d",
+    "object": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/HUDWindowController.swift.o",
+    "swiftmodule": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/HUDWindowController~partial.swiftmodule",
+    "swift-dependencies": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/HUDWindowController.swiftdeps"
+  },
+  "/Users/970uraj/dev/rcmd/Sources/HotkeyManager.swift": {
+    "dependencies": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/HotkeyManager.d",
+    "object": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/HotkeyManager.swift.o",
+    "swiftmodule": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/HotkeyManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/HotkeyManager.swiftdeps"
+  },
+  "/Users/970uraj/dev/rcmd/Sources/SettingsWindow.swift": {
+    "dependencies": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/SettingsWindow.d",
+    "object": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/SettingsWindow.swift.o",
+    "swiftmodule": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/SettingsWindow~partial.swiftmodule",
+    "swift-dependencies": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/SettingsWindow.swiftdeps"
+  },
+  "/Users/970uraj/dev/rcmd/Sources/main.swift": {
+    "dependencies": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/main.d",
+    "object": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/main.swift.o",
+    "swiftmodule": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/main~partial.swiftmodule",
+    "swift-dependencies": "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/debug/appcmd.build/main.swiftdeps"
+  }
+}

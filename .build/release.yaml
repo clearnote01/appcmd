@@ -1,0 +1,66 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "PackageStructure": ["<PackageStructure>"]
+  "appcmd-release.exe": ["<appcmd-release.exe>"]
+  "appcmd-release.module": ["<appcmd-release.module>"]
+  "main": ["<appcmd-release.exe>","<appcmd-release.module>"]
+  "test": ["<appcmd-release.exe>","<appcmd-release.module>"]
+default: "main"
+nodes:
+  "/Users/970uraj/dev/rcmd/Sources/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+commands:
+  "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/970uraj/dev/rcmd/Sources/AppSwitcher.swift","/Users/970uraj/dev/rcmd/Sources/AppSwitcherOverlay.swift","/Users/970uraj/dev/rcmd/Sources/ConfigStore.swift","/Users/970uraj/dev/rcmd/Sources/HotkeyManager.swift","/Users/970uraj/dev/rcmd/Sources/SettingsWindow.swift","/Users/970uraj/dev/rcmd/Sources/Version.swift","/Users/970uraj/dev/rcmd/Sources/main.swift"]
+    outputs: ["/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/sources"]
+    description: "Write auxiliary file /Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/sources"
+
+  "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.product/Objects.LinkFileList":
+    tool: write-auxiliary-file
+    inputs: ["<link-file-list>","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/AppSwitcher.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/AppSwitcherOverlay.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/ConfigStore.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/HotkeyManager.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/SettingsWindow.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/Version.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/main.swift.o"]
+    outputs: ["/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.product/Objects.LinkFileList"]
+    description: "Write auxiliary file /Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.product/Objects.LinkFileList"
+
+  "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/swift-version--1AB21518FC5DEDBE.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Library/Developer/CommandLineTools/usr/bin/swiftc"]
+    outputs: ["/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/swift-version--1AB21518FC5DEDBE.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/swift-version--1AB21518FC5DEDBE.txt"
+
+  "<appcmd-release.exe>":
+    tool: phony
+    inputs: ["/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd"]
+    outputs: ["<appcmd-release.exe>"]
+
+  "<appcmd-release.module>":
+    tool: phony
+    inputs: ["/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/AppSwitcher.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/AppSwitcherOverlay.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/ConfigStore.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/HotkeyManager.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/SettingsWindow.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/Version.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/main.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.swiftmodule"]
+    outputs: ["<appcmd-release.module>"]
+
+  "C.appcmd-release.exe":
+    tool: shell
+    inputs: ["/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/AppSwitcher.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/AppSwitcherOverlay.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/ConfigStore.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/HotkeyManager.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/SettingsWindow.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/Version.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/main.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.product/Objects.LinkFileList"]
+    outputs: ["/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd"]
+    description: "Linking ./.build/arm64-apple-macosx/release/appcmd"
+    args: ["/Library/Developer/CommandLineTools/usr/bin/swiftc","-L","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release","-o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd","-module-name","appcmd","-emit-executable","-Xlinker","-dead_strip","-Xlinker","-alias","-Xlinker","_appcmd_main","-Xlinker","_main","-Xlinker","-rpath","-Xlinker","@loader_path","@/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.product/Objects.LinkFileList","-target","arm64-apple-macosx13.0","-sdk","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-g"]
+
+  "C.appcmd-release.module":
+    tool: shell
+    inputs: ["/Users/970uraj/dev/rcmd/Sources/AppSwitcher.swift","/Users/970uraj/dev/rcmd/Sources/AppSwitcherOverlay.swift","/Users/970uraj/dev/rcmd/Sources/ConfigStore.swift","/Users/970uraj/dev/rcmd/Sources/HotkeyManager.swift","/Users/970uraj/dev/rcmd/Sources/SettingsWindow.swift","/Users/970uraj/dev/rcmd/Sources/Version.swift","/Users/970uraj/dev/rcmd/Sources/main.swift","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/swift-version--1AB21518FC5DEDBE.txt","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/sources"]
+    outputs: ["/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/AppSwitcher.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/AppSwitcherOverlay.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/ConfigStore.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/HotkeyManager.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/SettingsWindow.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/Version.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/main.swift.o","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.swiftmodule"]
+    description: "Compiling Swift Module 'appcmd' (7 sources)"
+    args: ["/Library/Developer/CommandLineTools/usr/bin/swiftc","-module-name","appcmd","-emit-dependencies","-emit-module","-emit-module-path","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.swiftmodule","-output-file-map","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/output-file-map.json","-whole-module-optimization","-num-threads","12","-c","@/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/sources","-I","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release","-target","arm64-apple-macosx13.0","-swift-version","5","-O","-j12","-DSWIFT_PACKAGE","-module-cache-path","/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/ModuleCache","-parseable-output","-Xfrontend","-entry-point-function-name","-Xfrontend","appcmd_main","-color-diagnostics","-sdk","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-g","-Xcc","-isysroot","-Xcc","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-Xcc","-fPIC","-Xcc","-g","-package-name","rcmd"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/970uraj/dev/rcmd/Sources/","/Users/970uraj/dev/rcmd/Package.swift","/Users/970uraj/dev/rcmd/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+

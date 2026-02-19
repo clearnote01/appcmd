@@ -1,0 +1,11 @@
+version: "Apple Swift version 5.10 (swiftlang-5.10.0.13 clang-1500.3.9.4)"
+options: "730a834d7413d1bae9d076bb0abce14e"
+build_time: [1771484098, 769953000]
+inputs:
+  "/Users/970uraj/dev/rcmd/Sources/AppSwitcher.swift": [9223372036, 854775807]
+  "/Users/970uraj/dev/rcmd/Sources/AppSwitcherOverlay.swift": [9223372036, 854775807]
+  "/Users/970uraj/dev/rcmd/Sources/ConfigStore.swift": [9223372036, 854775807]
+  "/Users/970uraj/dev/rcmd/Sources/HotkeyManager.swift": [9223372036, 854775807]
+  "/Users/970uraj/dev/rcmd/Sources/SettingsWindow.swift": [9223372036, 854775807]
+  "/Users/970uraj/dev/rcmd/Sources/Version.swift": [9223372036, 854775807]
+  "/Users/970uraj/dev/rcmd/Sources/main.swift": [9223372036, 854775807]

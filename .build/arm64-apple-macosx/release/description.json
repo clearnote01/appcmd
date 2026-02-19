@@ -1,0 +1,310 @@
+{
+  "builtTestProducts" : [
+
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.appcmd-release.module" : {
+      "executable" : "/Library/Developer/CommandLineTools/usr/bin/swiftc",
+      "fileList" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/sources",
+      "importPath" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/Sources/AppSwitcher.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/Sources/AppSwitcherOverlay.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/Sources/ConfigStore.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/Sources/HotkeyManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/Sources/SettingsWindow.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/Sources/Version.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/Sources/main.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/swift-version--1AB21518FC5DEDBE.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/sources"
+        }
+      ],
+      "isLibrary" : false,
+      "moduleName" : "appcmd",
+      "moduleOutputPath" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.swiftmodule",
+      "objects" : [
+        "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/AppSwitcher.swift.o",
+        "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/AppSwitcherOverlay.swift.o",
+        "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/ConfigStore.swift.o",
+        "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/HotkeyManager.swift.o",
+        "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/SettingsWindow.swift.o",
+        "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/Version.swift.o",
+        "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/main.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx13.0",
+        "-swift-version",
+        "5",
+        "-O",
+        "-j12",
+        "-DSWIFT_PACKAGE",
+        "-module-cache-path",
+        "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/ModuleCache",
+        "-parseable-output",
+        "-Xfrontend",
+        "-entry-point-function-name",
+        "-Xfrontend",
+        "appcmd_main",
+        "-color-diagnostics",
+        "-sdk",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "rcmd"
+      ],
+      "outputFileMapPath" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/AppSwitcher.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/AppSwitcherOverlay.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/ConfigStore.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/HotkeyManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/SettingsWindow.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/Version.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/main.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.swiftmodule"
+        }
+      ],
+      "sources" : [
+        "/Users/970uraj/dev/rcmd/Sources/AppSwitcher.swift",
+        "/Users/970uraj/dev/rcmd/Sources/AppSwitcherOverlay.swift",
+        "/Users/970uraj/dev/rcmd/Sources/ConfigStore.swift",
+        "/Users/970uraj/dev/rcmd/Sources/HotkeyManager.swift",
+        "/Users/970uraj/dev/rcmd/Sources/SettingsWindow.swift",
+        "/Users/970uraj/dev/rcmd/Sources/Version.swift",
+        "/Users/970uraj/dev/rcmd/Sources/main.swift"
+      ],
+      "tempsPath" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build",
+      "wholeModuleOptimization" : true
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "appcmd" : [
+      "/Library/Developer/CommandLineTools/usr/bin/swiftc",
+      "-module-name",
+      "appcmd",
+      "-package-name",
+      "rcmd",
+      "-whole-module-optimization",
+      "-num-threads",
+      "12",
+      "-c",
+      "/Users/970uraj/dev/rcmd/Sources/AppSwitcher.swift",
+      "/Users/970uraj/dev/rcmd/Sources/AppSwitcherOverlay.swift",
+      "/Users/970uraj/dev/rcmd/Sources/ConfigStore.swift",
+      "/Users/970uraj/dev/rcmd/Sources/HotkeyManager.swift",
+      "/Users/970uraj/dev/rcmd/Sources/SettingsWindow.swift",
+      "/Users/970uraj/dev/rcmd/Sources/Version.swift",
+      "/Users/970uraj/dev/rcmd/Sources/main.swift",
+      "-I",
+      "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release",
+      "-target",
+      "arm64-apple-macosx13.0",
+      "-swift-version",
+      "5",
+      "-O",
+      "-j12",
+      "-DSWIFT_PACKAGE",
+      "-module-cache-path",
+      "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/ModuleCache",
+      "-parseable-output",
+      "-Xfrontend",
+      "-entry-point-function-name",
+      "-Xfrontend",
+      "appcmd_main",
+      "-color-diagnostics",
+      "-sdk",
+      "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "rcmd",
+      "-driver-use-frontend-path",
+      "/Library/Developer/CommandLineTools/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "appcmd" : [
+
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+
+  },
+  "writeCommands" : {
+    "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/Sources/AppSwitcher.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/Sources/AppSwitcherOverlay.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/Sources/ConfigStore.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/Sources/HotkeyManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/Sources/SettingsWindow.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/Sources/Version.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/Sources/main.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/sources"
+    },
+    "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/AppSwitcher.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/AppSwitcherOverlay.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/ConfigStore.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/HotkeyManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/SettingsWindow.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/Version.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.build/main.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/appcmd.product/Objects.LinkFileList"
+    },
+    "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/swift-version--1AB21518FC5DEDBE.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Library/Developer/CommandLineTools/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/970uraj/dev/rcmd/.build/arm64-apple-macosx/release/swift-version--1AB21518FC5DEDBE.txt"
+    }
+  }
+}
